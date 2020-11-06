@@ -27,6 +27,7 @@ func init() {
 }
 
 func host(philos []*Philo, seatsNum int, eatTimes int) {
+	defer eatWG.Done()
 	eating := make(chan *Philo, 2)
 
 	for i := 0; i < seatsNum; i++ {
@@ -91,6 +92,7 @@ func main() {
 		philos[i] = &Philo{i + 1, chopSticks[i], chopSticks[(i+1)%seatsNum]}
 	}
 
-	host(philos, seatsNum, eatTimes)
+	eatWG.Add(1)
+	go host(philos, seatsNum, eatTimes)
 	eatWG.Wait()
 }
